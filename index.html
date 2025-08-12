@@ -7,18 +7,18 @@
       <title>Genius API - Documentação</title>
    </head>
    <body>
-      <div id="openapi"></div>
+      <div id="swagger-ui"></div>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.31.1/swagger-ui-bundle.js"></script>
       <script>
          window.onload = function () {
            const ui = SwaggerUIBundle({
              url: "https://raw.githubusercontent.com/igor-ferraz/genius-openapi/refs/heads/main/genius.openapi.yml",
-             dom_id: "#openapi",
+             dom_id: "#swagger-ui",
              docExpansion: "list"
            })
          }
          
-         const targetNode = document.getElementsByClassName('swagger-ui')[0];
+         const targetNode = document.getElementById('swagger-ui');
          
          const observer = new MutationObserver(() => {
            const h4Element = document.querySelector('.models.is-open > h4');
