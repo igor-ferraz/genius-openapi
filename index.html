@@ -17,6 +17,22 @@
              docExpansion: "list"
            })
          }
+         
+         const targetNode = document.getElementById('swagger-ui');
+         
+         const observer = new MutationObserver(() => {
+           const h4Element = document.querySelector('.models.is-open > h4');
+            
+           if (h4Element) {
+             h4Element.click();
+             observer.disconnect();
+           }
+         });
+         
+         observer.observe(targetNode, {
+           childList: true,
+           subtree: true
+         });
       </script>
    </body>
 </html>
