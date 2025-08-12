@@ -18,7 +18,7 @@
            })
          }
          
-         const targetNode = document.getElementById('swagger-ui');
+         const targetNode = document.getElementsByClassName('swagger-ui')[0];
          
          const observer = new MutationObserver(() => {
            const h4Element = document.querySelector('.models.is-open > h4');
