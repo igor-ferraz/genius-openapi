@@ -6,7 +6,7 @@ info:
     email: igor.ferraz@eaimkt.com.br
   version: 1.0.12
 servers:
-  - url: https://pseudo-api.genius.com
+  - url: https://www.multikc.com.br/serviceshmg/api
 tags:
   - name: Autenticação
     description: Métodos para autenticação
@@ -31,7 +31,7 @@ tags:
   - name: Rate limit
     description: Controle de utilização por participante
 paths:
-  /api/oAuth2/token:
+  /oAuth2/token:
     post:
       tags:
         - Autenticação
@@ -56,7 +56,7 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequestResponse'
   
-  /api/chatbot/v1/participante/pesquisa:
+  /chatbot/v1/participante/pesquisa:
     get:
       tags:
         - Participantes
@@ -95,7 +95,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/participante/{participanteId}:
+  /chatbot/v1/participante/{participanteId}:
     get:
       tags:
         - Participantes
@@ -122,7 +122,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/participante/{participanteId}/saldo-catalogo:
+  /chatbot/v1/participante/{participanteId}/saldo-catalogo:
     get:
       tags:
         - Participantes
@@ -147,7 +147,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/participante/{participanteId}/campanhas:
+  /chatbot/v1/participante/{participanteId}/campanhas:
     get:
       tags:
         - Campanhas
@@ -174,7 +174,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/participante/{participanteId}/menus:
+  /chatbot/v1/participante/{participanteId}/menus:
     get:
       tags:
         - Menus
@@ -221,7 +221,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/participante/{participanteId}/faleconosco:
+  /chatbot/v1/participante/{participanteId}/faleconosco:
     get:
       tags:
         - Fale Conosco
@@ -277,7 +277,7 @@ paths:
       security:
         - BearerAuth: []
 
-  /api/chatbot/v1/participante/{participanteId}/faleconosco/{protocolo}:
+  /chatbot/v1/participante/{participanteId}/faleconosco/{protocolo}:
     get:
       tags:
         - Fale Conosco
@@ -310,7 +310,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/faleconosco/assuntos:
+  /faleconosco/assuntos:
     get:
       tags:
         - Fale Conosco
@@ -335,7 +335,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/participante/{participanteId}/kpi/filtros:
+  /chatbot/v1/participante/{participanteId}/kpi/filtros:
     get:
       tags:
         - KPIs
@@ -369,7 +369,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/participante/{participanteId}/kpi/extrato:
+  /chatbot/v1/participante/{participanteId}/kpi/extrato:
     get:
       tags:
         - KPIs
@@ -445,7 +445,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/ranking/periodos:
+  /chatbot/v1/ranking/periodos:
     get:
       tags:
         - Rankings
@@ -478,7 +478,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/participante/{participanteId}/ranking/filtros:
+  /chatbot/v1/participante/{participanteId}/ranking/filtros:
     get:
       tags:
         - Rankings
@@ -517,7 +517,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/participante/{participanteId}/ranking:
+  /chatbot/v1/participante/{participanteId}/ranking:
     get:
       tags:
         - Rankings
@@ -575,7 +575,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/conteudo/tipos:
+  /chatbot/v1/conteudo/tipos:
     get:
       tags:
         - Conteúdos
@@ -600,7 +600,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/participante/{participanteId}/conteudo/tipo/{tipoId}:
+  /chatbot/v1/participante/{participanteId}/conteudo/tipo/{tipoId}:
     get:
       tags:
         - Conteúdos
@@ -633,7 +633,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/participante/{participanteId}/conteudo/{conteudoId}/tipo/{tipoId}:
+  /chatbot/v1/participante/{participanteId}/conteudo/{conteudoId}/tipo/{tipoId}:
     get:
       tags:
         - Conteúdos
@@ -671,7 +671,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/participante/{participanteId}/noticias:
+  /chatbot/v1/participante/{participanteId}/noticias:
     get:
       tags:
         - Notícias
@@ -712,7 +712,7 @@ paths:
       security:
         - BearerAuth: []
           
-  /api/chatbot/v1/participante/{participanteId}/noticia/{noticiaId}:
+  /chatbot/v1/participante/{participanteId}/noticia/{noticiaId}:
     get:
       tags:
         - Notícias
@@ -746,7 +746,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/participante/{participanteId}/games/fases:
+  /chatbot/v1/participante/{participanteId}/games/fases:
     get:
       tags:
         - Games
@@ -801,7 +801,7 @@ paths:
       security:
         - BearerAuth: []
         
-  /api/chatbot/v1/participante/{participanteId}/game/fase/{faseId}:
+  /chatbot/v1/participante/{participanteId}/game/fase/{faseId}:
     get:
       tags:
         - Games
@@ -843,7 +843,7 @@ paths:
       security:
         - BearerAuth: []
      
-  /api/chatbot/v1/participante/{participanteId}/game-resposta:
+  /chatbot/v1/participante/{participanteId}/game-resposta:
     post:
       tags:
         - Games
@@ -875,7 +875,7 @@ paths:
         - BearerAuth: []
       
         
-  /api/chatbot/v1/participante/{participanteId}/sessao:
+  /chatbot/v1/participante/{participanteId}/sessao:
     post:
       tags:
       - Rate limit
@@ -897,7 +897,7 @@ paths:
       security:
       - BearerAuth: []
 
-  /api/chatbot/v1/participante/{participanteId}/sessao/{sessaoId}/mensagem:
+  /chatbot/v1/participante/{participanteId}/sessao/{sessaoId}/mensagem:
     post:
       tags:
       - Rate limit
