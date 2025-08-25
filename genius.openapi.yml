@@ -12,6 +12,10 @@ tags:
     description: Métodos para autenticação
   - name: Participantes
     description: Métodos de participantes
+  - name: Campanhas
+    description: Métodos de campanhas
+  - name: Menus
+    description: Métodos de menus
   - name: Fale Conosco
     description: Métodos de fale conosco
   - name: KPIs
@@ -24,6 +28,8 @@ tags:
     description: Métodos de notícias
   - name: Games
     description: Métodos de games
+  - name: Rate limit
+    description: Controle de utilização por participante
 paths:
   /api/oAuth2/token:
     post:
@@ -46,11 +52,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/TokenResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
         '400':
-          description: Bad Request
+          $ref: '#/components/responses/BadRequestResponse'
   
-  /api/participante/pesquisa:
+  /api/chatbot/v1/participante/pesquisa:
     get:
       tags:
         - Participantes
@@ -81,19 +87,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/ParticipanteSimplesResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
         '404':
-          description: Not Found
+          $ref: '#/components/responses/NotFoundResponse'
       security:
         - BearerAuth: []
         
-  /api/participante/{participanteId}:
+  /api/chatbot/v1/participante/{participanteId}:
     get:
       tags:
         - Participantes
@@ -101,13 +103,7 @@ paths:
       description: Obtém um participante pelo id
       operationId: getParticipante
       parameters:
-        - name: participanteId
-          in: path
-          description: ID do Participante
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/ParticipanteIdPath'
       responses:
         '200':
           description: Resposta de sucesso
@@ -116,19 +112,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/ParticipanteResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
         '404':
-          description: Not Found
+          $ref: '#/components/responses/NotFoundResponse'
       security:
         - BearerAuth: []
         
-  /api/participante/{participanteId}/saldo:
+  /api/chatbot/v1/participante/{participanteId}/saldo-catalogo:
     get:
       tags:
         - Participantes
@@ -136,13 +130,7 @@ paths:
       description: Obtém o saldo um participante
       operationId: getParticipanteSaldo
       parameters:
-        - name: participanteId
-          in: path
-          description: ID do Participante
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/ParticipanteIdPath'
       responses:
         '200':
           description: Resposta de sucesso
@@ -151,31 +139,23 @@ paths:
               schema:
                 $ref: '#/components/schemas/ParticipanteSaldoResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
         
-  /api/participante/{participanteId}/campanhas:
+  /api/chatbot/v1/participante/{participanteId}/campanhas:
     get:
       tags:
-        - Participantes
+        - Campanhas
       summary: Obter campanhas de um participante
       description: Obtém todas as campanhas de um participante
       operationId: getCampanhasByParticipante
       parameters:
-        - name: participanteId
-          in: path
-          description: ID do Participante
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/ParticipanteIdPath'
       responses:
         '200':
           description: Resposta de sucesso
@@ -186,20 +166,18 @@ paths:
                 items:
                   $ref: '#/components/schemas/CampanhaResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
         
-  /api/participante/{participanteId}/campanha/{campanhaId}/menus:
+  /api/chatbot/v1/participante/{participanteId}/menus:
     get:
       tags:
-        - Participantes
+        - Menus
       summary: Obter menus de acordo com o participante e campanha
       description: |-
         Obtém os menus de acordo com o participante e campanha.
@@ -217,15 +195,9 @@ paths:
         10. Noticias
       operationId: getMenusByParticipante
       parameters:
-        - name: participanteId
-          in: path
-          description: ID do Participante
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/ParticipanteIdPath'
         - name: campanhaId
-          in: path
+          in: query
           description: ID da Campanha
           required: true
           schema:
@@ -241,38 +213,23 @@ paths:
                 items:
                   $ref: '#/components/schemas/MenuResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
         
-  /api/participante/{participanteId}/campanha/{campanhaId}/faleconosco:
+  /api/chatbot/v1/participante/{participanteId}/faleconosco:
     get:
       tags:
-        - Participantes
-      summary: Obter chamados do Fale Conosco de acordo com o participante e campanha
-      description: Obtém chamados do fale conosco de acordo com o participante e campanha.
+        - Fale Conosco
+      summary: Obter chamados do Fale Conosco de um participante
+      description: Obtém chamados do fale conosco de um participante.
       operationId: getChamadosByParticipante
       parameters:
-        - name: participanteId
-          in: path
-          description: ID do Participante
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: campanhaId
-          in: path
-          description: ID da Campanha
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/ParticipanteIdPath'
       responses:
         '200':
           description: Resposta de sucesso
@@ -283,16 +240,76 @@ paths:
                 items:
                   $ref: '#/components/schemas/ChamadoResponse'
         '400':
-          description: Bad Request
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+      security:
+        - BearerAuth: []
+        
+    post:
+      tags:
+        - Fale Conosco
+      summary: Criar um chamado
+      description: Criar um chamado para um participante
+      operationId: postChamado
+      parameters:
+        - $ref: '#/components/parameters/ParticipanteIdPath'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChamadoRequest'
+      responses:
+        '200':
+          description: Resposta de sucesso
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/ChamadoResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
 
+  /api/chatbot/v1/participante/{participanteId}/faleconosco/{protocolo}:
+    get:
+      tags:
+        - Fale Conosco
+      summary: Obter um chamado do fale conosco por protocolo
+      description: Obtém um chamado do fale conosco por protocolo
+      operationId: getChamado
+      parameters:
+        - $ref: '#/components/parameters/ParticipanteIdPath'
+        - name: protocolo
+          in: path
+          description: Protocolo
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Resposta de sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChamadoResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundResponse'
+      security:
+        - BearerAuth: []
+        
   /api/faleconosco/assuntos:
     get:
       tags:
@@ -310,81 +327,15 @@ paths:
                 items:
                   $ref: '#/components/schemas/AssuntoResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
-      security:
-        - BearerAuth: []
-
-  /api/faleconosco:
-    get:
-      tags:
-        - Fale Conosco
-      summary: Obter um chamado do fale conosco por protocolo
-      description: Obtém um chamado do fale conosco por protocolo
-      operationId: getChamado
-      parameters:
-        - name: protocolo
-          in: query
-          description: Protocolo
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Resposta de sucesso
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChamadoResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-        '404':
-          description: Not Found
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
         
-  /api/faleconosco/simplificado:
-    post:
-      tags:
-        - Fale Conosco
-      summary: Cria um chamado
-      description: Cria um chamado para um participante
-      operationId: postChamado
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ChamadoRequest'
-      responses:
-        '200':
-          description: Resposta de sucesso
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ChamadoResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: Unauthorized
-      security:
-        - BearerAuth: []
-        
-  /api/kpi/filtros:
+  /api/chatbot/v1/participante/{participanteId}/kpi/filtros:
     get:
       tags:
         - KPIs
@@ -392,13 +343,7 @@ paths:
       description: Obtém os tipos de exibições do extrato
       operationId: getFiltrosKPI
       parameters:
-        - name: participanteId
-          in: query
-          description: ID do Participante
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/ParticipanteIdPath'
         - name: campanhaId
           in: query
           description: ID da Campanha
@@ -416,17 +361,15 @@ paths:
                 items:
                   $ref: '#/components/schemas/ExtratoFiltroResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
         
-  /api/kpi/extrato-incentizap:
+  /api/chatbot/v1/participante/{participanteId}/kpi/extrato:
     get:
       tags:
         - KPIs
@@ -439,13 +382,7 @@ paths:
           2. Extrato detalhado
       operationId: getKPIs
       parameters:
-        - name: participanteId
-          in: query
-          description: ID do Participante
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/ParticipanteIdPath'
         - name: campanhaId
           in: query
           description: ID da Campanha
@@ -500,17 +437,15 @@ paths:
                 items:
                   $ref: '#/components/schemas/ExtratoResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
         
-  /api/ranking/periodos:
+  /api/chatbot/v1/ranking/periodos:
     get:
       tags:
         - Rankings
@@ -535,17 +470,15 @@ paths:
                 items:
                   $ref: '#/components/schemas/RankingPeriodoResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
         
-  /api/ranking/filtros-amigaveis:
+  /api/chatbot/v1/participante/{participanteId}/ranking/filtros:
     get:
       tags:
         - Rankings
@@ -553,6 +486,7 @@ paths:
       description: Obtém os filtros amigáveis de ranking
       operationId: getRankingFiltros
       parameters:
+        - $ref: '#/components/parameters/ParticipanteIdPath'
         - name: ano
           in: query
           description: Ano
@@ -575,17 +509,15 @@ paths:
                 items:
                   $ref: '#/components/schemas/RankingFiltroResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
         
-  /api/ranking/incentizap:
+  /api/chatbot/v1/participante/{participanteId}/ranking:
     get:
       tags:
         - Rankings
@@ -593,13 +525,7 @@ paths:
       description: Obtém o ranqueamento de acordo com a parametrização
       operationId: getRanking
       parameters:
-        - name: participanteId
-          in: query
-          description: ID do Participante
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/ParticipanteIdPath'
         - name: campanhaId
           in: query
           description: ID da Campanha
@@ -641,17 +567,15 @@ paths:
                 items:
                   $ref: '#/components/schemas/RankingResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
         
-  /api/conteudo/tipos:
+  /api/chatbot/v1/conteudo/tipos:
     get:
       tags:
         - Conteúdos
@@ -668,17 +592,15 @@ paths:
                 items:
                   $ref: '#/components/schemas/ConteudoTipoResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
         
-  /api/conteudo/tipo/{tipoId}:
+  /api/chatbot/v1/participante/{participanteId}/conteudo/tipo/{tipoId}:
     get:
       tags:
         - Conteúdos
@@ -686,6 +608,7 @@ paths:
       description: Obtém os conteúdos de um tipo
       operationId: getConteudos
       parameters:
+        - $ref: '#/components/parameters/ParticipanteIdPath'
         - name: tipoId
           in: path
           description: ID do Tipo
@@ -702,17 +625,15 @@ paths:
                 items:
                   $ref: '#/components/schemas/ConteudoSimplesResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
         
-  /api/conteudo/{conteudoId}/tipo/{tipoId}:
+  /api/chatbot/v1/participante/{participanteId}/conteudo/{conteudoId}/tipo/{tipoId}:
     get:
       tags:
         - Conteúdos
@@ -720,6 +641,7 @@ paths:
       description: Obtém um conteúdo completo
       operationId: getConteudo
       parameters:
+        - $ref: '#/components/parameters/ParticipanteIdPath'
         - name: conteudoId
           in: path
           description: ID do Conteúdo
@@ -741,17 +663,15 @@ paths:
               schema:
                   $ref: '#/components/schemas/ConteudoResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
         
-  /api/noticias:
+  /api/chatbot/v1/participante/{participanteId}/noticias:
     get:
       tags:
         - Notícias
@@ -762,13 +682,7 @@ paths:
         Para obter a <strong>primeira página</strong>, deve-se enviar <strong>pagina = 0.</strong>
       operationId: getNoticias
       parameters:
-        - name: participanteId
-          in: query
-          description: ID do Participante
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/ParticipanteIdPath'
         - name: pagina
           in: query
           description: Página (zero-based)
@@ -790,17 +704,15 @@ paths:
                 items:
                   $ref: '#/components/schemas/NoticiaSimplesResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
           
-  /api/noticia/{noticiaId}:
+  /api/chatbot/v1/participante/{participanteId}/noticia/{noticiaId}:
     get:
       tags:
         - Notícias
@@ -808,16 +720,10 @@ paths:
       description: Obtém uma notícia completa
       operationId: getNoticia
       parameters:
+        - $ref: '#/components/parameters/ParticipanteIdPath'
         - name: noticiaId
           in: path
           description: ID da Notícia
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: participanteId
-          in: query
-          description: ID do Participante
           required: true
           schema:
             type: string
@@ -832,34 +738,45 @@ paths:
                 items:
                   $ref: '#/components/schemas/NoticiaResponse'
         '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
         
-  /api/games:
+  /api/chatbot/v1/participante/{participanteId}/games/fases:
     get:
       tags:
         - Games
-      summary: Obter lista de games
-      description: Obtém lista de games de acordo com parametrização
+      summary: Obter lista de fases de games
+      description: |-
+        Obtém lista de fases de games de acordo com parametrização
+        
+        <strong>Enum de Tipo</strong>:
+          1. Quiz
+          2. Enquete
+          
+        <strong>Enum de Status</strong>:
+          1. Pendente
+          2. Respondida
+          3. Encerrada
       operationId: getGames
       parameters:
-        - name: participanteId
-          in: query
-          description: ID do Participante
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/ParticipanteIdPath'
         - name: tipo
           in: query
-          description: ID da Notícia
+          description: Tipo do game
+          schema:
+            type: integer
+            enum: [1, 2]
+            x-enum-descriptions:
+              - Quiz
+              - Enquete
+        - name: status
+          in: query
+          description: Status do game
           schema:
             type: integer
             enum: [1, 2]
@@ -874,17 +791,153 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/GameSimplesResponse'
+                  $ref: '#/components/schemas/GameFaseSimplesResponse'
         '400':
-          description: Bad Request
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+      security:
+        - BearerAuth: []
+        
+  /api/chatbot/v1/participante/{participanteId}/game/fase/{faseId}:
+    get:
+      tags:
+        - Games
+      summary: Obter fase detalhada de um game
+      description: |-
+        Obtém fase de game de acordo com parametrização
+        
+        <strong>Enum de Tipo</strong>:
+          1. Quiz
+          2. Enquete
+          
+        <strong>Enum de Status</strong>:
+          1. Pendente
+          2. Respondida
+          3. Encerrada
+      operationId: getGameFase
+      parameters:
+        - $ref: '#/components/parameters/ParticipanteIdPath'
+        - name: faseId
+          in: path
+          description: ID da Fase
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Resposta de sucesso
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/GameFaseResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
         '401':
-          description: Unauthorized
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
       security:
         - BearerAuth: []
+     
+  /api/chatbot/v1/participante/{participanteId}/game-resposta:
+    post:
+      tags:
+        - Games
+      summary: Salvar a resposta do participante em uma fase de um game
+      description: Salva a resposta de um Participante em uma Fase de um Game
+      operationId: postGameFase
+      parameters:
+        - $ref: '#/components/parameters/ParticipanteIdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GamePergunta'
+      responses:
+        '200':
+          description: Resposta de sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GamePergunta'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+      security:
+        - BearerAuth: []
+      
+        
+  /api/chatbot/v1/participante/{participanteId}/sessao:
+    post:
+      tags:
+      - Rate limit
+      summary: Iniciar nova sessão para participante
+      description: Inicia uma nova sessão para o participante
+      parameters:
+      - $ref: '#/components/parameters/ParticipanteIdPath'
+      responses:
+        '201':
+          description: Sessão iniciada com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InicioSessaoResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+      security:
+      - BearerAuth: []
+
+  /api/chatbot/v1/participante/{participanteId}/sessao/{sessaoId}/mensagem:
+    post:
+      tags:
+      - Rate limit
+      summary: Debitar saldo do participante
+      description: |-
+        Notifica que o participante mandou uma mensagem, em qual jornada (caso haja) e debita o crédito.
+        
+        <strong>Enum de Jornada (null se ainda não houver)</strong>:
+        1. FaleConosco
+        2. FAQ
+        3. Extrato
+        4. Ranking
+        5. Conteudo
+        6. Games
+        7. Comunicados
+        8. Catalogo
+        9. Cadastro
+        10. Noticias
+      parameters:
+      - $ref: '#/components/parameters/ParticipanteIdPath'
+      - $ref: '#/components/parameters/SessaoIdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MensagemRequest'
+      responses:
+        '200':
+          description: Mensagem processada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MensagemResponse'
+        '400':
+          $ref: '#/components/responses/BadRequestResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenResponse'
+      security:
+      - BearerAuth: []
           
 components:
   schemas:
@@ -1107,7 +1160,7 @@ components:
             - Em Andamento
         dataInclusao:
           type: string
-          description: Data de Inclusão
+          description: Data de inclusão
           format: date-time
     
     ChamadoRequest:
@@ -1332,7 +1385,7 @@ components:
           items:
             type: string
             
-    GameSimplesResponse:
+    GameSimples:
       type: object
       properties:
         id:
@@ -1342,6 +1395,9 @@ components:
         nome:
           type: string
           description: Nome
+        descricao:
+          type: string
+          description: Descrição
         tipo:
           type: integer
           description: Tipo (Enum)
@@ -1349,6 +1405,76 @@ components:
           x-enum-descriptions:
             - Quiz
             - Enquete
+        usarVidas:
+          type: boolean
+          description: Usa vida
+          
+    GamePergunta:
+      type: object
+      properties:
+        id: 
+          type: string
+          format: uuid
+          description: ID da Pergunta
+        pergunta:
+          type: string
+          description: Pergunta
+        dissertativa:
+          type: boolean
+          description: Dissertativa
+        respondida:
+          type: boolean
+          description: Respondida
+        respostaDissertativa:
+          type: string
+          description: Resposta dissertativa
+        respostas:
+          type: array
+          items:
+            $ref: '#/components/schemas/GameResposta'
+          
+    GameResposta:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID da Resposta
+        resposta:
+          type: string
+          description: Resposta
+        selecionada:
+          type: boolean
+          description: Selecionada pelo Participante
+        correta:
+          type: boolean
+          description: Correta
+        respondidaEm:
+          type: string
+          format: date-time
+          description: Data de inclusão
+            
+    GameFaseSimplesResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Identificador único
+        nome:
+          type: string
+          description: Nome
+        ordem:
+          type: number
+          description: Ordenação
+        status:
+          type: integer
+          description: Status (Enum)
+          enum: [1, 2]
+          x-enum-descriptions:
+            - Pendente
+            - Respondida
+            - Encerrada
         dataInicio:
           type: string
           format: date-time
@@ -1357,14 +1483,178 @@ components:
           type: string
           format: date-time
           description: Data final
+        imagemUrl:
+          type: string
+          description: URL da imagem
+        game:
+          $ref: '#/components/schemas/GameSimples'
           
-    ErrorResponse:
+    GameFaseResponse:
+      allOf:
+        - $ref: '#/components/schemas/GameFaseSimplesResponse'
+      type: object
+      properties:
+        perguntas:
+          type: array
+          items:
+            $ref: '#/components/schemas/GamePergunta'
+      
+          
+    InicioSessaoResponse:
+      type: object
+      properties:
+        sessaoId:
+          type: string
+          format: uuid
+        creditosRestantes:
+          type: integer
+          example: 10
+        creditosExtrasRestantes:
+          type: integer
+          example: 3
+        renovaEm:
+          type: string
+          format: date-time
+      required:
+      - sessaoId
+      - estado
+      
+    MensagemRequest:
       type: object
       properties:
         mensagem:
           type: string
-        redirecionaUrl:
+          example: Mensagem enviada pelo participante
+        jornada:
+          type: integer
+          description: |-
+            Enum de Jornada
+            1. FaleConosco
+            2. FAQ
+            3. Extrato
+            4. Ranking
+            5. Conteudo
+            6. Games
+            7. Comunicados
+            8. Catalogo
+            9. Cadastro
+            10. Noticias
+          enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+          x-enum-descriptions:
+            - FaleConosco
+            - FAQ
+            - Extrato
+            - Ranking
+            - Conteudo
+            - Games
+            - Comunicados
+            - Catalogo
+            - Cadastro
+            - Noticias
+      required:
+      - mensagem
+      
+    MensagemResponse:
+      type: object
+      properties:
+        permiteContinuar:
+          type: boolean
+          example: true
+        creditosRestantes:
+          type: integer
+          example: 9
+        creditosExtrasRestantes:
+          type: integer
+          example: 20
+      required:
+        - permiteContinuar
+        - creditosRestantes
+        - creditosExtrasRestantes
+        
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+        codigo:
           type: string
+          example: 'BAD_REQUEST ou SALDO_INSUFICIENTE'
+          enum:
+            - BAD_REQUEST
+            - SALDO_INSUFICIENTE
+        mensagem:
+          type: string
+        urlRedirecionamento:
+          type: string
+        detalhes:
+          type: object
+          description: 'Objeto dinâmico com detalhes do erro'
+        
+  responses:
+    ForbiddenResponse:
+      description: 'Acesso negado por créditos insuficientes'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            default:
+              $ref: '#/components/examples/ForbiddenExample'
+          
+    BadRequestResponse:
+      description: 'Requisição inválida'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            default:
+              $ref: '#/components/examples/BadRequestExample'
+    
+    UnauthorizedResponse:
+      description: 'Não autorizado'
+      
+    NotFoundResponse:
+      description: 'Não encontrado'
+   
+  examples:
+    BadRequestExample:
+      value:
+        status: 400
+        codigo: 'BAD_REQUEST'
+        mensagem: 'Requisição inválida'
+        urlRedirecionamento: null
+        detalhes: {
+          "propriedade1": "Este campo é obrigatório.",
+          "propriedade2": "Valor informado é inválido."
+        }
+        
+    ForbiddenExample:
+      value:
+        status: 403
+        codigo: 'SALDO_INSUFICIENTE'
+        mensagem: 'Saldo insuficiente.'
+        urlRedirecionamento: null
+        detalhes: {}
+      
+  parameters:
+    ParticipanteIdPath:
+        name: participanteId
+        in: path
+        description: ID do Participante
+        required: true
+        schema:
+          type: string
+          format: uuid
+          
+    SessaoIdPath:
+      name: sessaoId
+      in: path
+      description: ID da Sessão
+      required: true
+      schema:
+        type: string
+          
   securitySchemes:
     BearerAuth:
       type: http
