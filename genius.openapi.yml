@@ -1567,12 +1567,15 @@ components:
         permiteContinuar:
           type: boolean
           example: true
-        creditosRestantes:
+        creditos:
           type: integer
           example: 9
-        creditosExtrasRestantes:
+        creditosExtras:
           type: integer
           example: 20
+        creditosIA:
+          type: integer
+          example: 4
       required:
         - permiteContinuar
         - creditosRestantes
