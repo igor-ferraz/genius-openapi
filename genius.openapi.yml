@@ -6,7 +6,7 @@ info:
     email: igor.ferraz@eaimkt.com.br
   version: 1.0.12
 servers:
-  - url: https://www.multikc.com.br/serviceshmg/api
+  - url: https://www.multikc.com.br/incentizap/api
 tags:
   - name: Autenticação
     description: Métodos para autenticação
