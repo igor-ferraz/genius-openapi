@@ -193,7 +193,6 @@ paths:
         8. Catalogo
         9. Cadastro
         10. Noticias
-        11. IA
       operationId: getMenusByParticipante
       parameters:
         - $ref: '#/components/parameters/ParticipanteIdPath'
@@ -808,7 +807,13 @@ paths:
         - Games
       summary: Obter fase detalhada de um game
       description: |-
-        Obtém fase de game de acordo com parametrização
+        Obtém fase de game de acordo com parametrização.
+        
+        <strong>Regras gerais:</strong>
+        
+        - <strong>Perguntas Dissertativas</strong> não possuem lista de <strong>Respostas</strong>.
+        - Apenas as <strong>Perguntas</strong> já respondidas tem as <strong>Respostas</strong> corretas sinalizadas.
+        - Para validar a <strong>Resposta</strong> do <strong>Participante</strong>, é necessário enviá-la para o endpoint abaixo.
         
         <strong>Enum de Tipo</strong>:
           1. Quiz
@@ -844,28 +849,34 @@ paths:
       security:
         - BearerAuth: []
      
-  /chatbot/v1/participante/{participanteId}/game-resposta:
+  /chatbot/v1/participante/{participanteId}/game/fase/{faseId}/resposta:
     post:
       tags:
         - Games
       summary: Salvar a resposta do participante em uma fase de um game
-      description: Salva a resposta de um Participante em uma Fase de um Game
+      description: |-
+        Salva a resposta de um Participante em uma Fase de um Game.
+        
+        - Para <strong>Perguntas</strong> não dissertativas, o endpoint retorna se a <strong>Resposta</strong> está correta.
+        - Enviar <strong>respostaDissertativa</strong> para <strong>Perguntas</strong> que sejam dissertativas.
+        - Enviar <strong>respostaId</strong> para <strong>Perguntas</strong> que não sejam dissertativas.
       operationId: postGameFase
       parameters:
         - $ref: '#/components/parameters/ParticipanteIdPath'
+        - $ref: '#/components/parameters/GameFaseIdPath'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GamePergunta'
+              $ref: '#/components/schemas/GameRespostaRequest'
       responses:
         '200':
           description: Resposta de sucesso
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GamePergunta'
+                $ref: '#/components/schemas/GameResposta'
         '400':
           $ref: '#/components/responses/BadRequestResponse'
         '401':
@@ -917,7 +928,6 @@ paths:
         8. Catalogo
         9. Cadastro
         10. Noticias
-        11. IA
       parameters:
       - $ref: '#/components/parameters/ParticipanteIdPath'
       - $ref: '#/components/parameters/SessaoIdPath'
@@ -1121,8 +1131,7 @@ components:
             8. Catalogo
             9. Cadastro
             10. Noticias
-            11. IA
-          enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+          enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
           x-enum-descriptions:
             - FaleConosco
             - FAQ
@@ -1443,19 +1452,33 @@ components:
           type: string
           format: uuid
           description: ID da Resposta
-        resposta:
-          type: string
-          description: Resposta
-        selecionada:
-          type: boolean
-          description: Selecionada pelo Participante
         correta:
           type: boolean
           description: Correta
+        perguntaId:
+          type: string
+          format: uuid
+          description: ID da Pergunta
         respondidaEm:
           type: string
           format: date-time
           description: Data de inclusão
+          
+    GameRespostaRequest:
+      type: object
+      description: 'Enviar apenas um: respostaId OU respostaDissertativa'
+      properties:
+        perguntaId:
+          type: string
+          format: uuid
+          description: ID da Pergunta
+        respostaId:
+          type: string
+          format: uuid
+          description: ID da Resposta
+        respostaDissertativa:
+          type: string
+          description: Resposta Dissertativa
             
     GameFaseSimplesResponse:
       type: object
@@ -1509,15 +1532,12 @@ components:
         sessaoId:
           type: string
           format: uuid
-        creditos:
+        creditosRestantes:
           type: integer
           example: 10
-        creditosExtras:
+        creditosExtrasRestantes:
           type: integer
           example: 3
-        creditosIA:
-          type: integer
-          example: 0
         renovaEm:
           type: string
           format: date-time
@@ -1545,8 +1565,7 @@ components:
             8. Catalogo
             9. Cadastro
             10. Noticias
-            11. IA
-          enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+          enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
           x-enum-descriptions:
             - FaleConosco
             - FAQ
@@ -1567,15 +1586,12 @@ components:
         permiteContinuar:
           type: boolean
           example: true
-        creditos:
+        creditosRestantes:
           type: integer
           example: 9
-        creditosExtras:
+        creditosExtrasRestantes:
           type: integer
           example: 20
-        creditosIA:
-          type: integer
-          example: 4
       required:
         - permiteContinuar
         - creditosRestantes
@@ -1656,6 +1672,15 @@ components:
         schema:
           type: string
           format: uuid
+          
+    GameFaseIdPath:
+      name: faseId
+      in: path
+      description: ID da Fase
+      required: true
+      schema:
+        type: string
+        format: uuid
           
     SessaoIdPath:
       name: sessaoId
